@@ -1,0 +1,48 @@
+file = input("FASTA file name:")
+first_integer = input("First integer:")
+second_integer = input("Second integer:")
+
+def computational_function(file, first_integer, second_integer):
+    t = list(readin_fasta(file))
+    section = t[int(first_integer):int(second_integer)]
+    count = len(section)
+    primer_1 = ""
+    primer_2 = ""
+    
+    complement = reverse_complement(section)
+    for i in range(len(complement)):
+        if 'G' in complement[i] or 'C' in complement[i]:
+            primer_1 = complement[i : i+20]
+            if CG_edge(primer_1) == False:
+                primer_1 = ""
+            elif CG_edge(primer_1) == True:
+                if (CG_count(primer_1)/20) >= 0.4 and (CG_count(primer_1)/20) <= 0.6:
+                    start = list(primer_1)
+                    if complement5(start[0:10],start[10:20])==False:
+                        print("Start primer sequence:" + primer_1[::-1])
+                        break
+                    else:
+                        print("n/a")
+                        break
+
+    reversecode = section[::-1]
+    reverse_section = ''
+    for i in reversecode:
+        reverse_section = reverse_section + i
+    for i in range(len(reverse_section)):
+        if 'G' in reverse_section[i] or 'C' in reverse_section[i]:
+            primer_2 = reverse_section[i:i+20]
+            if CG_edge(primer_2)==False:
+                primer_2=""
+            elif CG_edge(primer_2)==True:
+                if (CG_count(primer_2)/20)>=0.4 and (CG_count(primer_2)/20)<=0.6:
+                    end = list(primer_2)
+                    if complement5(end[0:10],end[10:20])==False:
+                        print("Reverse primer sequence:" + primer_2[::-1])
+                        break
+                    else:
+                        print("n/a")
+                        break
+    return
+
+computational_function(file, first_integer, second_integer)
